@@ -1,0 +1,93 @@
+.wrap {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.notesContainer {
+    margin: 20px 0;
+    box-sizing: border-box;
+    width: 95%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.note {
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    display: flex;
+    column-gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    background: #E8EAF5;
+    color: #7A7A7A;
+}
+
+.note div {
+    box-sizing: border-box;
+    padding: 5px 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.noteHeader {
+    background: #999;
+    color: #fff;
+    font-weight: bold;
+}
+
+.noteHeader .btnEdit {
+    visibility: hidden;
+}
+
+.noteName {
+   width: 20%;
+}
+.noteItem > .noteName {
+    color: #616161;
+    font-weight: bold;
+}
+
+.noteName > i {
+    margin-right: 10px;
+}
+
+.noteCreated {
+    width: 15%;
+}
+
+.noteCategory {
+    width: 15%;
+}
+
+.noteContent {
+    width: 20%;
+}
+
+.noteDates {
+    width: 15%;
+}
+
+.btnControl {
+    /*width: 15%;*/
+    display: flex;
+    column-gap: 10px;
+}
+
+.btnControl > div:hover {
+    cursor: pointer;
+}
+
+#btnCreateNote {
+    margin-right: 2.5%;
+    align-self: end;
+}
+
