@@ -4,7 +4,7 @@ const noteCategory = {
     TASK: 'Task',
     IDEA: 'Idea',
     RANDOM_THOUGHT: 'Random Thought'
-}
+};
 
 const noteStatus = {
     ACTIVE: 'active',
@@ -29,6 +29,12 @@ const noteHeaderHtml = '<div class="note noteHeader">\n' +
     '                    <i class="fa-solid fa-trash"></i>\n' +
     '                </div>\n' +
     '            </div>\n' +
+    '        </div>';
+
+const statHeaderHtml = '<div class="note noteHeader">\n' +
+    '            <div class="noteName">Note Category</div>\n' +
+    '            <div class="noteContent">Active</div>\n' +
+    '            <div class="noteContent">Archived</div>\n' +
     '        </div>';
 
 //generates random id;
@@ -110,6 +116,7 @@ const notesArray = [
 
 const notesContainer = document.getElementsByClassName('notesContainer')[0];
 const archNotesContainer = document.getElementsByClassName('archNotesContainer')[0];
+const statContainer = document.getElementsByClassName('statisticContainer')[0];
 
 renderNotes(notesArray, notesContainer, archNotesContainer);
 
@@ -186,6 +193,46 @@ function renderNotes(arr, actContainer, archContainer) {
 
     addEventAllBtnTrash();
     addEventAllBtnArch();
+
+    renderStatistic(noteCategory, notesArray, statContainer);
+}
+
+function renderStatistic(categories, arr, container) {
+    container.innerHTML = statHeaderHtml;
+
+    for (const [, value] of Object.entries(categories)) {
+        console.log(value)
+
+        const note = document.createElement('div');
+        note.classList.add('note', 'noteItem');
+
+        const noteCategory = document.createElement('div');
+        noteCategory.classList.add('noteName');
+
+        switch (value) {
+            case 'Task':
+                noteCategory.innerHTML = '<i class="fa-solid fa-calendar-check"></i>' + value
+                break;
+            case 'Random Thought':
+                noteCategory.innerHTML = '<i class="fa-solid fa-head-side-virus"></i>' + value
+                break;
+            case 'Idea':
+                noteCategory.innerHTML = '<i class="fa-solid fa-lightbulb"></i>' + value
+                break;
+            default:
+                noteCategory.innerHTML = '<i class="fa-sharp fa-solid fa-clipboard-list-check"></i>' + value
+        }
+
+        const actCount = document.createElement('div');
+        actCount.classList.add('noteContent');
+        actCount.innerText = countStatus(value, noteStatus.ACTIVE, arr);
+        const archCount = document.createElement('div');
+        archCount.classList.add('noteContent');
+        archCount.innerText = countStatus(value, noteStatus.ARCHIVED, arr);
+
+        note.append(noteCategory, actCount, archCount);
+        container.appendChild(note);
+    }
 }
 
 function addEventAllBtnTrash() {
@@ -232,3 +279,8 @@ function formatDate(date) {
 
     return formatDate.substring(0, formatDate.length - 5).concat(', ') + formatDate.substring(formatDate.length, formatDate.length - 4);
 }
+
+function countStatus(val, status, arr) {
+    return arr.filter(item => item.noteStatus === status && item.category === val).length;
+}
+
