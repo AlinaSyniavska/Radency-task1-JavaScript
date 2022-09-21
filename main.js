@@ -1,41 +1,6 @@
-// import {noteCategory, noteStatus} from "./constants";
-
-const noteCategory = {
-    TASK: 'Task',
-    IDEA: 'Idea',
-    RANDOM_THOUGHT: 'Random Thought'
-};
-
-const noteStatus = {
-    ACTIVE: 'active',
-    ARCHIVED: 'archived',
-    DELETED: 'deleted'
-}
-
-const noteHeaderHtml = '<div class="note noteHeader">\n' +
-    '            <div class="noteName">Name</div>\n' +
-    '            <div class="noteCreated">Created</div>\n' +
-    '            <div class="noteCategory">Category</div>\n' +
-    '            <div class="noteContent">Content</div>\n' +
-    '            <div class="noteDates">Dates</div>\n' +
-    '            <div class="btnControl">\n' +
-    '                <div class="btnEdit">\n' +
-    '                    <i class="fa-solid fa-pen"></i>\n' +
-    '                </div>\n' +
-    '                <div class="btnArch">\n' +
-    '                    <i class="fa-solid fa-file-zipper"></i>\n' +
-    '                </div>\n' +
-    '                <div class="btnTrash">\n' +
-    '                    <i class="fa-solid fa-trash"></i>\n' +
-    '                </div>\n' +
-    '            </div>\n' +
-    '        </div>';
-
-const statHeaderHtml = '<div class="note noteHeader">\n' +
-    '            <div class="noteName">Note Category</div>\n' +
-    '            <div class="noteContent">Active</div>\n' +
-    '            <div class="noteContent">Archived</div>\n' +
-    '        </div>';
+import {noteCategory, noteStatus} from './js/constants.js'
+import {noteHeaderHtml, statHeaderHtml} from './js/htmlTemplates.js'
+import {formatDate, countStatus} from './js/helpers.js'
 
 //generates random id;
 const guid = () => {
@@ -120,6 +85,7 @@ const statContainer = document.getElementsByClassName('statisticContainer')[0];
 
 renderNotes(notesArray, notesContainer, archNotesContainer);
 
+// FUNCTIONS
 function renderNotes(arr, actContainer, archContainer) {
     actContainer.innerHTML = noteHeaderHtml;
     archContainer.innerHTML = '';
@@ -272,7 +238,6 @@ function addEventAllBtnArch() {
 function addEventAllBtnUnzip() {
     const btnUnzip = document.querySelectorAll('.archNotesContainer > .noteItem > .btnControl > .btnArch');
 
-
     btnUnzip.forEach((btn) => {
         btn.addEventListener('click', () => {
 
@@ -290,18 +255,5 @@ function addEventAllBtnUnzip() {
 }
 
 
-// HELPERS
-function formatDate(date) {
-    const formatDate = new Date(date)
-        .toDateString()
-        .split(' ')
-        .slice(-3)
-        .join(' ');
 
-    return formatDate.substring(0, formatDate.length - 5).concat(', ') + formatDate.substring(formatDate.length, formatDate.length - 4);
-}
-
-function countStatus(val, status, arr) {
-    return arr.filter(item => item.noteStatus === status && item.category === val).length;
-}
 
