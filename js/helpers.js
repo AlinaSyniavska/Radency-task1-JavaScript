@@ -23,3 +23,17 @@ export const guid = () => {
     //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+
+export function getDate2Digits(date) {
+    // '2022, 9, 25' => ['2022', '9', '25']
+    const formatDate = [];
+    date.forEach((item) => {
+        if(item.length < 2){
+            item = '0'.concat(item);
+        }
+
+        formatDate.push(item);
+    })
+
+    return formatDate;
+}
