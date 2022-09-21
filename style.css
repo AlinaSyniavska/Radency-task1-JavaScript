@@ -6,7 +6,8 @@
     flex-direction: column;
 }
 
-.notesContainer {
+.notesContainer,
+.archNotesContainer {
     margin: 20px 0;
     box-sizing: border-box;
     width: 95%;
@@ -82,12 +83,26 @@
     column-gap: 10px;
 }
 
+.btnControl > div {
+    transition: .5s;
+    transform: scale(100%);
+}
+
 .btnControl > div:hover {
     cursor: pointer;
+    transition: .5s;
+    transform: scale(120%);
 }
 
 #btnCreateNote {
     margin-right: 2.5%;
     align-self: end;
+}
+
+.deletedNote {
+    display: none;
+}
+.archivedNote {
+    display: none;
 }
 
