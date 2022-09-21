@@ -13,35 +13,36 @@
 <h4 class="formTitle">Create Note</h4>
 <form action="#" name="noteForm" class="noteForm">
     <label>Note Name
-        <input type="text" name="noteName" required>
+        <input type="text" name="noteName">
     </label>
     <label>Note Content
-        <input type="text" name="noteContent" required>
+        <input type="text" name="noteContent">
     </label>
     <div>Note Category
         <label>
-            <input type="radio" checked name="noteCategory" value="task">
+            <input type="radio" checked name="noteCategory" value="Task">
             TASK
         </label>
         <label>
-            <input type="radio" name="noteCategory" value="idea">
+            <input type="radio" name="noteCategory" value="Idea">
             IDEA
         </label>
         <label>
-            <input type="radio" name="noteCategory" value="random_thought">
+            <input type="radio" name="noteCategory" value="Random Thought">
             RANDOM THOUGHT
         </label>
 
     </div>
     <label>Date
-        <input type="date" name="noteCreateDate" required>
+        <input type="date" name="noteCreateDate">
     </label>
     <div class="formBtnContainer">
         <button id="btnSetNote">Create Note</button>
         <button id="btnEditNote" disabled>Edit Note</button>
+        <button id="btnClose">CLOSE</button>
     </div>
 </form>
 
-<script src="createNote.js"></script>
+<script type="module" src="createNote.js"></script>
 </body>
 </html>

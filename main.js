@@ -73,7 +73,16 @@ const archNotesContainer = document.getElementsByClassName('archNotesContainer')
 const statContainer = document.getElementsByClassName('statisticContainer')[0];
 const btnCreateNote = document.getElementById('btnCreateNote');
 const iframeElement = document.getElementsByTagName('iframe')[0];
-// const iframe = document.getElementsByTagName('iframe')[0];
+// const iframe = document.getElementById('newNoteWin');
+
+window.onmessage = function (event) {
+    if ('id' in event.data && 'name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data && 'noteStatus' in event.data) {
+        console.log(event.data);
+        notesArray.push({...event.data});
+        renderNotes(notesArray, notesContainer, archNotesContainer);
+    }
+};
+
 
 renderNotes(notesArray, notesContainer, archNotesContainer);
 
