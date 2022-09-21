@@ -193,6 +193,7 @@ function renderNotes(arr, actContainer, archContainer) {
 
     addEventAllBtnTrash();
     addEventAllBtnArch();
+    addEventAllBtnUnzip();
 
     renderStatistic(noteCategory, notesArray, statContainer);
 }
@@ -201,8 +202,6 @@ function renderStatistic(categories, arr, container) {
     container.innerHTML = statHeaderHtml;
 
     for (const [, value] of Object.entries(categories)) {
-        console.log(value)
-
         const note = document.createElement('div');
         note.classList.add('note', 'noteItem');
 
@@ -247,18 +246,40 @@ function addEventAllBtnTrash() {
 
             const note = document.querySelector(`[data-id="${idDeletedNote}"]`);
             note.remove();
+
+            renderStatistic(noteCategory, notesArray, statContainer);
         })
     })
 }
 
 function addEventAllBtnArch() {
-    const btnArch = document.querySelectorAll('.noteItem > .btnControl > .btnArch');
+    const btnArch = document.querySelectorAll('.notesContainer > .noteItem > .btnControl > .btnArch');
     btnArch.forEach((btn) => {
         btn.addEventListener('click', () => {
             const idArchivedNote = btn.parentElement.parentElement.getAttribute('data-id');
             const indexArchivedNote = notesArray.findIndex(item => item.id === idArchivedNote);
 
             notesArray[indexArchivedNote].noteStatus = noteStatus.ARCHIVED;
+
+            const note = document.querySelector(`[data-id="${idArchivedNote}"]`);
+            note.remove();
+
+            renderNotes(notesArray, notesContainer, archNotesContainer);
+        })
+    })
+}
+
+function addEventAllBtnUnzip() {
+    const btnUnzip = document.querySelectorAll('.archNotesContainer > .noteItem > .btnControl > .btnArch');
+
+
+    btnUnzip.forEach((btn) => {
+        btn.addEventListener('click', () => {
+
+            const idArchivedNote = btn.parentElement.parentElement.getAttribute('data-id');
+            const indexArchivedNote = notesArray.findIndex(item => item.id === idArchivedNote);
+
+            notesArray[indexArchivedNote].noteStatus = noteStatus.ACTIVE;
 
             const note = document.querySelector(`[data-id="${idArchivedNote}"]`);
             note.remove();
