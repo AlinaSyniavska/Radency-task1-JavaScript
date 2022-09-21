@@ -1,17 +1,6 @@
 import {noteCategory, noteStatus} from './js/constants.js'
 import {noteHeaderHtml, statHeaderHtml} from './js/htmlTemplates.js'
-import {formatDate, countStatus} from './js/helpers.js'
-
-//generates random id;
-const guid = () => {
-    let s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
+import {formatDate, countStatus, guid} from './js/helpers.js'
 
 const notesArray = [
     {
@@ -82,6 +71,9 @@ const notesArray = [
 const notesContainer = document.getElementsByClassName('notesContainer')[0];
 const archNotesContainer = document.getElementsByClassName('archNotesContainer')[0];
 const statContainer = document.getElementsByClassName('statisticContainer')[0];
+const btnCreateNote = document.getElementById('btnCreateNote');
+const iframeElement = document.getElementsByTagName('iframe')[0];
+// const iframe = document.getElementsByTagName('iframe')[0];
 
 renderNotes(notesArray, notesContainer, archNotesContainer);
 
@@ -252,6 +244,10 @@ function addEventAllBtnUnzip() {
             renderNotes(notesArray, notesContainer, archNotesContainer);
         })
     })
+}
+
+btnCreateNote.onclick = () => {
+    iframeElement.classList.add('visible')
 }
 
 

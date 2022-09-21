@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="createNoteStyle.css">
+</head>
+<body>
+
+<h4 class="formTitle">Create Note</h4>
+<form action="#" name="noteForm" class="noteForm">
+    <label>Note Name
+        <input type="text" name="noteName" required>
+    </label>
+    <label>Note Content
+        <input type="text" name="noteContent" required>
+    </label>
+    <div>Note Category
+        <label>
+            <input type="radio" checked name="noteCategory" value="task">
+            TASK
+        </label>
+        <label>
+            <input type="radio" name="noteCategory" value="idea">
+            IDEA
+        </label>
+        <label>
+            <input type="radio" name="noteCategory" value="random_thought">
+            RANDOM THOUGHT
+        </label>
+
+    </div>
+    <label>Date
+        <input type="date" name="noteCreateDate" required>
+    </label>
+    <div class="formBtnContainer">
+        <button id="btnSetNote">Create Note</button>
+        <button id="btnEditNote" disabled>Edit Note</button>
+    </div>
+</form>
+
+<script src="createNote.js"></script>
+</body>
+</html>
