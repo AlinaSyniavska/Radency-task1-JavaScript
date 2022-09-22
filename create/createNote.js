@@ -39,19 +39,21 @@ btnSendEditNote?.addEventListener('click', () => {
         created: form.noteCreateDate.value,
         category: form.noteCategory.value,
         content: form.noteContent.value,
-        dates: [oldCreateNoteDate, form.noteCreateDate.value],
+        // dates: [oldCreateNoteDate, form.noteCreateDate.value],
+        dates: oldCreateNoteDate === form.noteCreateDate.value ? [] : [oldCreateNoteDate, form.noteCreateDate.value],
         // noteStatus: noteStatus.ACTIVE,
     }
 
-    window.top.postMessage(editNote, '*')
+    window.top.postMessage(editNote, '*');
+    window.parent.document.getElementById('newNoteWin').classList.remove('visible');
 })
 
 btnClose?.addEventListener('click', () => {
     // window.parent.document.getElementById('newNoteWin').parentNode.removeChild(window.parent.document.getElementById('newNoteWin'))
-    window.parent.document.getElementById('newNoteWin').classList.remove('visible')
+    window.parent.document.getElementById('newNoteWin').classList.remove('visible');
 })
 
-window.onmessage = function(event){
+window.onmessage = function (event) {
     if ('id' in event.data && 'name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data && 'noteStatus' in event.data) {
         form.noteName.value = event.data.name;
         form.noteCreateDate.value = event.data.created;

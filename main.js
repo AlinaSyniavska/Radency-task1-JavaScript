@@ -18,7 +18,7 @@ const notesArray = [
         created: '2022, 9, 29',
         category: noteCategory.RANDOM_THOUGHT,
         content: 'Health Hackathon is an event where you will solve challenges and create new innovative products for health and healthcare!',
-        dates: ['2022, 8, 29', '2022, 9, 5'],
+        dates: [],
         noteStatus: noteStatus.ACTIVE,
     },
     {
@@ -36,7 +36,7 @@ const notesArray = [
         created: '2022, 9, 23',
         category: noteCategory.IDEA,
         content: 'The event will be held in English',
-        dates: ['2022, 8, 23', '2022, 8, 30'],
+        dates: [],
         noteStatus: noteStatus.ACTIVE,
     },
     {
@@ -238,7 +238,6 @@ function addEventAllBtnEdit() {
 
             const dateForForm = editNote.created.split(', ');
             editNote.created = getDate2Digits(dateForForm).join('-')
-            console.log(editNote.created)
 
             iframe.contentWindow.postMessage(editNote, '*');
             iframe.classList.add('visible');
@@ -271,7 +270,6 @@ btnCreateNote.onclick = () => {
 
 window.onmessage = function (event) {
     if ('id' in event.data && 'name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data && 'noteStatus' in event.data) {
-        console.log(event.data);
         notesArray.push({...event.data});
     } else if ('name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data) {
         notesArray[index] = Object.assign(notesArray[index], {...event.data});
