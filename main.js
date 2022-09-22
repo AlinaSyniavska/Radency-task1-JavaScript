@@ -1,17 +1,6 @@
 import {noteCategory, noteStatus} from './js/constants.js'
 import {noteHeaderHtml, statHeaderHtml} from './js/htmlTemplates.js'
-import {formatDate, countStatus} from './js/helpers.js'
-
-//generates random id;
-const guid = () => {
-    let s4 = () => {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
+import {formatDate, countStatus, guid, getDate2Digits} from './js/helpers.js'
 
 const notesArray = [
     {
@@ -29,7 +18,7 @@ const notesArray = [
         created: '2022, 9, 29',
         category: noteCategory.RANDOM_THOUGHT,
         content: 'Health Hackathon is an event where you will solve challenges and create new innovative products for health and healthcare!',
-        dates: ['2022, 8, 29', '2022, 9, 5'],
+        dates: [],
         noteStatus: noteStatus.ACTIVE,
     },
     {
@@ -47,7 +36,7 @@ const notesArray = [
         created: '2022, 9, 23',
         category: noteCategory.IDEA,
         content: 'The event will be held in English',
-        dates: ['2022, 8, 23', '2022, 8, 30'],
+        dates: [],
         noteStatus: noteStatus.ACTIVE,
     },
     {
@@ -82,6 +71,9 @@ const notesArray = [
 const notesContainer = document.getElementsByClassName('notesContainer')[0];
 const archNotesContainer = document.getElementsByClassName('archNotesContainer')[0];
 const statContainer = document.getElementsByClassName('statisticContainer')[0];
+const btnCreateNote = document.getElementById('btnCreateNote');
+const iframe = document.getElementById('newNoteWin');
+let index;
 
 renderNotes(notesArray, notesContainer, archNotesContainer);
 
@@ -159,6 +151,7 @@ function renderNotes(arr, actContainer, archContainer) {
 
     addEventAllBtnTrash();
     addEventAllBtnArch();
+    addEventAllBtnEdit();
     addEventAllBtnUnzip();
 
     renderStatistic(noteCategory, notesArray, statContainer);
@@ -235,6 +228,23 @@ function addEventAllBtnArch() {
     })
 }
 
+function addEventAllBtnEdit() {
+    const btnEdit = document.querySelectorAll('.notesContainer > .noteItem > .btnControl > .btnEdit');
+    btnEdit.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const idEditNote = btn.parentElement.parentElement.getAttribute('data-id');
+            const editNote = notesArray.find(item => item.id === idEditNote);
+            index = notesArray.findIndex(item => item.id === idEditNote);
+
+            const dateForForm = editNote.created.split(', ');
+            editNote.created = getDate2Digits(dateForForm).join('-')
+
+            iframe.contentWindow.postMessage(editNote, '*');
+            iframe.classList.add('visible');
+        })
+    })
+}
+
 function addEventAllBtnUnzip() {
     const btnUnzip = document.querySelectorAll('.archNotesContainer > .noteItem > .btnControl > .btnArch');
 
@@ -253,6 +263,19 @@ function addEventAllBtnUnzip() {
         })
     })
 }
+
+btnCreateNote.onclick = () => {
+    iframe.classList.add('visible');
+}
+
+window.onmessage = function (event) {
+    if ('id' in event.data && 'name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data && 'noteStatus' in event.data) {
+        notesArray.push({...event.data});
+    } else if ('name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data) {
+        notesArray[index] = Object.assign(notesArray[index], {...event.data});
+    }
+    renderNotes(notesArray, notesContainer, archNotesContainer);
+};
 
 
 
