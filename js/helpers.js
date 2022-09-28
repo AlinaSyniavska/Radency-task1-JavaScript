@@ -1,4 +1,3 @@
-// HELPERS
 export function formatDate(date) {
     const formatDate = new Date(date)
         .toDateString()
@@ -13,7 +12,6 @@ export function countStatus(val, status, arr) {
     return arr.filter(item => item.noteStatus === status && item.category === val).length;
 }
 
-//generates random id;
 export const guid = () => {
     let s4 = () => {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -28,7 +26,7 @@ export function getDate2Digits(date) {
     // '2022, 9, 25' => ['2022', '9', '25']
     const formatDate = [];
     date.forEach((item) => {
-        if(item.length < 2){
+        if (item.length < 2) {
             item = '0'.concat(item);
         }
 
@@ -37,3 +35,5 @@ export function getDate2Digits(date) {
 
     return formatDate;
 }
+
+

@@ -8,8 +8,9 @@ const btnClose = document.getElementById('btnClose');
 
 let oldCreateNoteDate;
 
-btnSetNote?.addEventListener('click', () => {
+btnSetNote?.addEventListener('click', (e) => {
     if (form.noteName.value === '' || form.noteCreateDate.value === '' || form.noteContent.value === '') {
+        e.preventDefault();
         alert('Fill all fields!')
         return;
     }
@@ -27,21 +28,19 @@ btnSetNote?.addEventListener('click', () => {
     window.top.postMessage(newNote, '*')
 })
 
-btnSendEditNote?.addEventListener('click', () => {
+btnSendEditNote?.addEventListener('click', (e) => {
     if (form.noteName.value === '' || form.noteCreateDate.value === '' || form.noteContent.value === '') {
+        e.preventDefault();
         alert('Fill all fields!')
         return;
     }
 
     const editNote = {
-        // id: guid(),
         name: form.noteName.value,
         created: form.noteCreateDate.value,
         category: form.noteCategory.value,
         content: form.noteContent.value,
-        // dates: [oldCreateNoteDate, form.noteCreateDate.value],
         dates: oldCreateNoteDate === form.noteCreateDate.value ? [] : [oldCreateNoteDate, form.noteCreateDate.value],
-        // noteStatus: noteStatus.ACTIVE,
     }
 
     window.top.postMessage(editNote, '*');
@@ -49,7 +48,6 @@ btnSendEditNote?.addEventListener('click', () => {
 })
 
 btnClose?.addEventListener('click', () => {
-    // window.parent.document.getElementById('newNoteWin').parentNode.removeChild(window.parent.document.getElementById('newNoteWin'))
     window.parent.document.getElementById('newNoteWin').classList.remove('visible');
 })
 

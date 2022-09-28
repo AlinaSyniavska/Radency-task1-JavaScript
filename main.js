@@ -1,6 +1,8 @@
-import {noteCategory, noteStatus} from './js/constants.js'
-import {noteHeaderHtml, statHeaderHtml} from './js/htmlTemplates.js'
-import {formatDate, countStatus, guid, getDate2Digits} from './js/helpers.js'
+import {noteCategory, noteStatus} from './js/constants.js';
+import {guid} from './js/helpers.js';
+
+import {updateNoteIndex} from "./js/eventListeners.js"
+import {renderNotes} from "./js/rendering.js"
 
 const notesArray = [
     {
@@ -70,199 +72,19 @@ const notesArray = [
 
 const notesContainer = document.getElementsByClassName('notesContainer')[0];
 const archNotesContainer = document.getElementsByClassName('archNotesContainer')[0];
-const statContainer = document.getElementsByClassName('statisticContainer')[0];
-const btnCreateNote = document.getElementById('btnCreateNote');
+const statsContainer = document.getElementsByClassName('statisticContainer')[0];
 const iframe = document.getElementById('newNoteWin');
-let index;
 
-renderNotes(notesArray, notesContainer, archNotesContainer);
+const btnCreateNote = document.getElementById('btnCreateNote');
 
-// FUNCTIONS
-function renderNotes(arr, actContainer, archContainer) {
-    actContainer.innerHTML = noteHeaderHtml;
-    archContainer.innerHTML = '';
+const objDOMElements = {
+    notesContainer,
+    archNotesContainer,
+    statsContainer,
+    iframe,
+};
 
-    arr.forEach(item => {
-        if (item.noteStatus !== noteStatus.DELETED) {
-            const note = document.createElement('div');
-            note.classList.add('note', 'noteItem');
-            note.setAttribute('data-id', item.id);
-
-            const noteName = document.createElement('div');
-            noteName.classList.add('noteName');
-
-            switch (item.category) {
-                case 'Task':
-                    noteName.innerHTML = '<i class="fa-solid fa-calendar-check"></i>' + item.name
-                    break;
-                case 'Random Thought':
-                    noteName.innerHTML = '<i class="fa-solid fa-head-side-virus"></i>' + item.name
-                    break;
-                case 'Idea':
-                    noteName.innerHTML = '<i class="fa-solid fa-lightbulb"></i>' + item.name
-                    break;
-                default:
-                    noteName.innerHTML = '<i class="fa-sharp fa-solid fa-clipboard-list-check"></i>' + item.name
-            }
-
-            const noteCreated = document.createElement('div');
-            noteCreated.classList.add('noteCreated');
-            noteCreated.innerText = formatDate(item.created);
-
-            const noteCategory = document.createElement('div');
-            noteCategory.classList.add('noteCategory');
-            noteCategory.innerText = item.category;
-
-            const noteContent = document.createElement('div');
-            noteContent.classList.add('noteContent');
-            noteContent.innerText = item.content;
-
-            const noteDates = document.createElement('div');
-            noteDates.classList.add('noteDates');
-            noteDates.innerText = item.dates.map(i => formatDate(i)).join('; ');
-
-            const btnControl = document.createElement('div');
-            btnControl.classList.add('btnControl');
-
-            const btnEdit = document.createElement('div');
-            btnEdit.classList.add('btnEdit');
-            btnEdit.innerHTML = '<i class="fa-solid fa-pen"></i>'
-            const btnArch = document.createElement('div');
-            btnArch.classList.add('btnArch');
-            btnArch.innerHTML = '<i class="fa-solid fa-file-zipper"></i>'
-            const btnTrash = document.createElement('div');
-            btnTrash.classList.add('btnTrash');
-            btnTrash.innerHTML = '<i class="fa-solid fa-trash"></i>'
-
-            if (item.noteStatus === noteStatus.ACTIVE) {
-                btnControl.append(btnEdit, btnArch, btnTrash);
-            } else if (item.noteStatus === noteStatus.ARCHIVED) {
-                btnControl.append(btnArch);
-            }
-
-            note.append(noteName, noteCreated, noteCategory, noteContent, noteDates, btnControl);
-            if (item.noteStatus === noteStatus.ACTIVE) {
-                actContainer.appendChild(note);
-            } else if (item.noteStatus === noteStatus.ARCHIVED) {
-                archContainer.appendChild(note);
-            }
-        }
-    })
-
-    addEventAllBtnTrash();
-    addEventAllBtnArch();
-    addEventAllBtnEdit();
-    addEventAllBtnUnzip();
-
-    renderStatistic(noteCategory, notesArray, statContainer);
-}
-
-function renderStatistic(categories, arr, container) {
-    container.innerHTML = statHeaderHtml;
-
-    for (const [, value] of Object.entries(categories)) {
-        const note = document.createElement('div');
-        note.classList.add('note', 'noteItem');
-
-        const noteCategory = document.createElement('div');
-        noteCategory.classList.add('noteName');
-
-        switch (value) {
-            case 'Task':
-                noteCategory.innerHTML = '<i class="fa-solid fa-calendar-check"></i>' + value
-                break;
-            case 'Random Thought':
-                noteCategory.innerHTML = '<i class="fa-solid fa-head-side-virus"></i>' + value
-                break;
-            case 'Idea':
-                noteCategory.innerHTML = '<i class="fa-solid fa-lightbulb"></i>' + value
-                break;
-            default:
-                noteCategory.innerHTML = '<i class="fa-sharp fa-solid fa-clipboard-list-check"></i>' + value
-        }
-
-        const actCount = document.createElement('div');
-        actCount.classList.add('noteContent');
-        actCount.innerText = countStatus(value, noteStatus.ACTIVE, arr);
-        const archCount = document.createElement('div');
-        archCount.classList.add('noteContent');
-        archCount.innerText = countStatus(value, noteStatus.ARCHIVED, arr);
-
-        note.append(noteCategory, actCount, archCount);
-        container.appendChild(note);
-    }
-}
-
-function addEventAllBtnTrash() {
-    const btnTrash = document.querySelectorAll('.noteItem > .btnControl > .btnTrash');
-    btnTrash.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const idDeletedNote = btn.parentElement.parentElement.getAttribute('data-id');
-            const indexDeletedNote = notesArray.findIndex(item => item.id === idDeletedNote);
-
-            // notesArray.splice(indexDeletedNote, 1);
-            notesArray[indexDeletedNote].noteStatus = noteStatus.DELETED;
-
-            const note = document.querySelector(`[data-id="${idDeletedNote}"]`);
-            note.remove();
-
-            renderStatistic(noteCategory, notesArray, statContainer);
-        })
-    })
-}
-
-function addEventAllBtnArch() {
-    const btnArch = document.querySelectorAll('.notesContainer > .noteItem > .btnControl > .btnArch');
-    btnArch.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const idArchivedNote = btn.parentElement.parentElement.getAttribute('data-id');
-            const indexArchivedNote = notesArray.findIndex(item => item.id === idArchivedNote);
-
-            notesArray[indexArchivedNote].noteStatus = noteStatus.ARCHIVED;
-
-            const note = document.querySelector(`[data-id="${idArchivedNote}"]`);
-            note.remove();
-
-            renderNotes(notesArray, notesContainer, archNotesContainer);
-        })
-    })
-}
-
-function addEventAllBtnEdit() {
-    const btnEdit = document.querySelectorAll('.notesContainer > .noteItem > .btnControl > .btnEdit');
-    btnEdit.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const idEditNote = btn.parentElement.parentElement.getAttribute('data-id');
-            const editNote = notesArray.find(item => item.id === idEditNote);
-            index = notesArray.findIndex(item => item.id === idEditNote);
-
-            const dateForForm = editNote.created.split(', ');
-            editNote.created = getDate2Digits(dateForForm).join('-')
-
-            iframe.contentWindow.postMessage(editNote, '*');
-            iframe.classList.add('visible');
-        })
-    })
-}
-
-function addEventAllBtnUnzip() {
-    const btnUnzip = document.querySelectorAll('.archNotesContainer > .noteItem > .btnControl > .btnArch');
-
-    btnUnzip.forEach((btn) => {
-        btn.addEventListener('click', () => {
-
-            const idArchivedNote = btn.parentElement.parentElement.getAttribute('data-id');
-            const indexArchivedNote = notesArray.findIndex(item => item.id === idArchivedNote);
-
-            notesArray[indexArchivedNote].noteStatus = noteStatus.ACTIVE;
-
-            const note = document.querySelector(`[data-id="${idArchivedNote}"]`);
-            note.remove();
-
-            renderNotes(notesArray, notesContainer, archNotesContainer);
-        })
-    })
-}
+renderNotes(notesArray, objDOMElements);
 
 btnCreateNote.onclick = () => {
     iframe.classList.add('visible');
@@ -272,9 +94,9 @@ window.onmessage = function (event) {
     if ('id' in event.data && 'name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data && 'noteStatus' in event.data) {
         notesArray.push({...event.data});
     } else if ('name' in event.data && 'created' in event.data && 'category' in event.data && 'content' in event.data && 'dates' in event.data) {
-        notesArray[index] = Object.assign(notesArray[index], {...event.data});
+        notesArray[updateNoteIndex] = Object.assign(notesArray[updateNoteIndex], {...event.data});
     }
-    renderNotes(notesArray, notesContainer, archNotesContainer);
+    renderNotes(notesArray, objDOMElements);
 };
 
 

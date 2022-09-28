@@ -79,7 +79,6 @@
 }
 
 .btnControl {
-    /*width: 15%;*/
     display: flex;
     column-gap: 10px;
 }
